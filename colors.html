@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Studio — MOODORA</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f3fb;
+    color: #30233f;
+}
+
+header {
+    background: white;
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #76549b;
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+header a {
+    color: #76549b;
+    text-decoration: none;
+}
+
+main {
+    max-width: 1050px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 38px;
+}
+
+.subtitle {
+    color: #887b96;
+    margin-bottom: 35px;
+}
+
+.panel {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px #30233f10;
+}
+
+.palette {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.color-card {
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid #eee;
+}
+
+.swatch {
+    height: 180px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.color-info {
+    padding: 12px 5px;
+    text-align: center;
+}
+
+.color-info input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    color: #30233f;
+}
+
+button {
+    border: none;
+    padding: 14px 20px;
+    border-radius: 11px;
+    background: #76549b;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background: #52366f;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.actions button {
+    flex: 1;
+}
+
+.secondary {
+    background: #eadff4;
+    color: #76549b;
+}
+
+.custom {
+    margin-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.custom input {
+    width: 65px;
+    height: 45px;
+    border: none;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+#message {
+    color: #76549b;
+    min-height: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #887b96;
+}
+
+@media(max-width: 650px) {
+    .palette {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .swatch {
+        height: 120px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">MOODORA.</div>
+    <a href="index.html">← Accueil</a>
+</header>
+
+<main>
+
+<h1>Color Studio 🎨</h1>
+
+<p class="subtitle">
+    Trouve les couleurs qui racontent ton univers.
+</p>
+
+<section class="panel">
+
+    <h2>Ta palette créative</h2>
+
+    <p>Génère une palette unique ou crée la tienne.</p>
+
+    <div class="palette" id="palette"></div>
+
+    <div class="actions">
+        <button id="generate">✨ Nouvelle palette</button>
+        <button id="copyAll" class="secondary">
+            Copier tous les codes
+        </button>
+    </div>
+
+    <div class="custom">
+
+        <h3>Ma couleur personnalisée</h3>
+
+        <input type="color" id="customColor"
+            value="#76549b">
+
+        <button id="addColor">
+            Ajouter cette couleur
+        </button>
+
+        <button id="save" class="secondary">
+            ❤️ Ajouter aux favoris
+        </button>
+
+    </div>
+
+    <p id="message"></p>
+
+</section>
+
+<section class="panel" style="margin-top:25px">
+
+    <h2>Mes palettes favorites ❤️</h2>
+
+    <div id="favorites">
+        <p>Aucune palette enregistrée pour le moment.</p>
+    </div>
+
+</section>
+
+</main>
+
+<footer>
+    © 2026 MOODORA — Create your own universe.
+</footer>
+
+<script>
+
+const palette = document.getElementById("palette");
+const message = document.getElementById("message");
+
+let colors = [
+    "#76549B",
+    "#CBB1E8",
+    "#F7F3FB",
+    "#E6D5F5",
+    "#352944"
+];
+
+let favorites = JSON.parse(
+    localStorage.getItem("moodora-favorites") || "[]"
+);
+
+function displayPalette() {
+
+    palette.innerHTML = "";
+
+    colors.forEach((color, index) => {
+
+        const card = document.createElement("div");
+        card.className = "color-card";
+
+        const swatch = document.createElement("div");
+        swatch.className = "swatch";
+        swatch.style.background = color;
+
+        const info = document.createElement("div");
+        info.className = "color-info";
+
+        const input = document.createElement("input");
+        input.value = color;
+        input.setAttribute("aria-label", "Code HEX couleur " + (index + 1));
+
+        input.addEventListener("change", () => {
+            if (/^#[0-9A-Fa-f]{6}$/.test(input.value)) {
+                colors[index] = input.value.toUpperCase();
+                displayPalette();
+            }
+        });
+
+        swatch.addEventListener("click", () => {
+            navigator.clipboard?.writeText(color)
+                .then(() => message.textContent = color + " copié !")
+                .catch(() => message.textContent = "Code HEX : " + color);
+        });
+
+        info.appendChild(input);
+        card.appendChild(swatch);
+        card.appendChild(info);
+
+        palette.appendChild(card);
+    });
+}
+
+function randomColor() {
+    return "#" + Math.floor(
+        Math.random() * 16777215
+    ).toString(16).padStart(6, "0").toUpperCase();
+}
+
+function generatePalette() {
+
+    colors = [];
+
+    for (let i = 0; i < 5; i++) {
+        colors.push(randomColor());
+    }
+
+    displayPalette();
+    message.textContent = "Nouvelle palette créée ✨";
+}
+
+function showFavorites() {
+
+    const container = document.getElementById("favorites");
+    container.innerHTML = "";
+
+    if (favorites.length === 0) {
+        container.textContent = "Aucune palette enregistrée.";
+        return;
+    }
+
+    favorites.forEach((favorite, index) => {
+
+        const item = document.createElement("div");
+        item.style.marginBottom = "20px";
+
+        const title = document.createElement("p");
+        title.textContent = "Palette " + (index + 1);
+
+        const colorsBox = document.createElement("div");
+        colorsBox.style.display = "flex";
+        colorsBox.style.height = "45px";
+        colorsBox.style.borderRadius = "8px";
+        colorsBox.style.overflow = "hidden";
+
+        favorite.forEach(color => {
+            const block = document.createElement("div");
+            block.style.background = color;
+            block.style.flex = "1";
+            colorsBox.appendChild(block);
+        });
+
+        item.appendChild(title);
+        item.appendChild(colorsBox);
+        container.appendChild(item);
+    });
+}
+
+document.getElementById("generate")
+    .addEventListener("click", generatePalette);
+
+document.getElementById("addColor")
+    .addEventListener("click", () => {
+
+        if (colors.length >= 5) {
+            message.textContent = "Ta palette contient déjà 5 couleurs.";
+            return;
+        }
+
+        colors.push(
+            document.getElementById("customColor").value.toUpperCase()
+        );
+
+        displayPalette();
+        message.textContent = "Couleur ajoutée !";
+    });
+
+document.getElementById("copyAll")
+    .addEventListener("click", async () => {
+
+        const text = colors.join(", ");
+
+        try {
+            await navigator.clipboard.writeText(text);
+            message.textContent = "Tous les codes ont été copiés !";
+        } catch {
+            message.textContent = "Codes : " + text;
+        }
+    });
+
+document.getElementById("save")
+    .addEventListener("click", () => {
+
+        favorites.push([...colors]);
+        showFavorites();
+
+        message.textContent = "Palette ajoutée aux favoris ! ❤️";
+    });
+
+displayPalette();
+showFavorites();
+
+</script>
+
+</body>
+</html>
+

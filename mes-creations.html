@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes créations - MOODORA</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body {
+    background: #f7f1ff;
+    color: #38234d;
+    font-family: Arial, sans-serif;
+    padding: 25px;
+}
+.container { max-width: 1000px; margin: auto; }
+header { display:flex; justify-content:space-between; flex-wrap:wrap; }
+a { color:#8050aa; text-decoration:none; }
+h1 { margin-top:40px; }
+.grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:18px;
+}
+.card {
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 5px 20px #0000000d;
+}
+.preview {
+    width:100%;
+    border-radius:12px;
+    object-fit:cover;
+}
+.delete {
+    background:#8050aa;
+    color:white;
+    border:0;
+    border-radius:9px;
+    padding:9px 13px;
+    cursor:pointer;
+}
+.empty {
+    background:white;
+    padding:30px;
+    border-radius:18px;
+    text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+    <h2>💜 MOODORA</h2>
+    <a href="espace.html">← Mon espace</a>
+</header>
+
+<h1>Ma bibliothèque ✨</h1>
+<p>Toutes tes créations réunies au même endroit.</p>
+
+<div id="gallery" class="grid"></div>
+
+<script>
+const gallery = document.getElementById("gallery");
+
+function displayCreations() {
+    const creations = JSON.parse(
+        localStorage.getItem("moodora-creations") || "[]"
+    );
+
+    gallery.innerHTML = "";
+
+    if (creations.length === 0) {
+        gallery.innerHTML = `
+            <div class="empty">
+                <h2>Ton espace est encore vide 💜</h2>
+                <p>Crée ton premier wallpaper ou moodboard !</p>
+                <a href="wallpaper.html">Découvrir Wallpaper Studio →</a>
+            </div>`;
+        return;
+    }
+
+    creations.forEach((creation, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const title = document.createElement("h3");
+        title.textContent = creation.title || "Ma création";
+        card.appendChild(title);
+
+        if (creation.image) {
+            const img = document.createElement("img");
+            img.src = creation.image;
+            img.className = "preview";
+            card.appendChild(img);
+        }
+
+        const remove = document.createElement("button");
+        remove.className = "delete";
+        remove.textContent = "Supprimer";
+        remove.onclick = () => {
+            const updated = creations.filter((_, i) => i !== index);
+            localStorage.setItem("moodora-creations", JSON.stringify(updated));
+            displayCreations();
+        };
+
+        card.appendChild(remove);
+        gallery.appendChild(card);
+    });
+}
+
+displayCreations();
+</script>
+
+</div>
+</body>
+</html>
+

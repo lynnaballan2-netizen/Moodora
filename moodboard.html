@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moodboard Studio — MOODORA</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f3fb;
+    color: #30233f;
+}
+
+header {
+    background: white;
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #76549b;
+}
+
+header a {
+    color: #76549b;
+    text-decoration: none;
+}
+
+main {
+    max-width: 1100px;
+    margin: 45px auto;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 38px;
+}
+
+.subtitle {
+    color: #887b96;
+    margin-bottom: 35px;
+}
+
+.editor {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.panel, .preview {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px #30233f10;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin: 20px 0 8px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ded3e9;
+    border-radius: 10px;
+}
+
+input[type="color"] {
+    height: 48px;
+    padding: 4px;
+}
+
+input[type="file"] {
+    font-size: 12px;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 11px;
+    padding: 14px;
+    margin-top: 18px;
+    background: #76549b;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #52366f;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    background: #e6d5f5;
+}
+
+.hint {
+    color: #887b96;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #887b96;
+}
+
+@media(max-width: 750px) {
+    .editor {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">MOODORA.</div>
+    <a href="index.html">← Accueil</a>
+</header>
+
+<main>
+
+<h1>Moodboard Studio ✨</h1>
+
+<p class="subtitle">
+    Assemble tes inspirations et crée ton propre univers.
+</p>
+
+<div class="editor">
+
+<section class="panel">
+
+    <h2>Ton moodboard</h2>
+
+    <label for="boardTitle">Titre de ton moodboard</label>
+    <input id="boardTitle"
+        type="text"
+        maxlength="45"
+        placeholder="My aesthetic universe">
+
+    <label for="photos">Importer tes photos</label>
+    <input id="photos"
+        type="file"
+        accept="image/*"
+        multiple>
+
+    <p class="hint">
+        Tu peux sélectionner jusqu'à 6 images depuis ton ordinateur.
+    </p>
+
+    <label for="background">Couleur de fond</label>
+    <input id="background" type="color" value="#e9ddf3">
+
+    <button id="create">Créer mon moodboard ✨</button>
+
+    <button id="download">Télécharger en PNG ↓</button>
+<button id="save">Enregistrer dans mes creations</button>
+    <p class="hint" id="status">
+        Commence par importer tes photos.
+    </p>
+
+</section>
+
+<section class="preview">
+
+    <h2>Aperçu</h2>
+
+    <canvas id="board"
+        width="900"
+        height="900"></canvas>
+
+</section>
+
+</div>
+</main>
+
+<footer>
+    © 2026 MOODORA — Your creativity, your universe.
+</footer>
+
+<script>
+
+const canvas = document.getElementById("board");
+const ctx = canvas.getContext("2d");
+document.getElementById("save")
+    .addEventListener("click", () => {
+
+        try {
+            const creations = JSON.parse(
+                localStorage.getItem("moodora-creations") || "[]"
+            );
+
+            creations.push({
+                title: titleInput.value.trim() || "Mon moodboard",
+                image: canvas.toDataURL("image/png"),
+                type: "moodboard",
+                date: new Date().toLocaleDateString("fr-FR")
+            });
+
+            localStorage.setItem(
+                "moodora-creations",
+                JSON.stringify(creations)
+            );
+
+            statusText.textContent =
+                "✨ Ton moodboard est enregistré !";
+
+        } catch (error) {
+            statusText.textContent =
+                "Stockage insuffisant. Essaie avec moins de créations.";
+        }
+    });
+
+const photoInput = document.getElementById("photos");
+const titleInput = document.getElementById("boardTitle");
+const backgroundInput = document.getElementById("background");
+const statusText = document.getElementById("status");
+
+let images = [];
+
+function drawBoard() {
+
+    const bg = backgroundInput.value;
+
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, 900, 900);
+
+    ctx.fillStyle = "#39264d";
+    ctx.textAlign = "center";
+    ctx.font = "bold 43px Georgia";
+
+    const title = titleInput.value.trim() || "MY MOODBOARD";
+
+    ctx.fillText(title, 450, 85, 800);
+
+    ctx.font = "17px Arial";
+    ctx.fillStyle = "#76549b";
+    ctx.fillText("MOODORA CREATIVE STUDIO", 450, 120);
+
+    if (images.length === 0) {
+        ctx.fillStyle = "#76549b";
+        ctx.font = "25px Arial";
+        ctx.fillText("Add your inspiration ✨", 450, 480);
+        return;
+    }
+
+    const positions = [
+        [55, 165, 370, 285],
+        [475, 165, 370, 285],
+        [55, 490, 370, 285],
+        [475, 490, 370, 285],
+        [55, 815, 370, 0],
+        [475, 815, 370, 0]
+    ];
+
+    const count = Math.min(images.length, 4);
+
+    for (let i = 0; i < count; i++) {
+
+        const [x, y, w, h] = positions[i];
+        const img = images[i];
+
+        const scale = Math.max(
+            w / img.width,
+            h / img.height
+        );
+
+        const sw = w / scale;
+        const sh = h / scale;
+
+        const sx = (img.width - sw) / 2;
+        const sy = (img.height - sh) / 2;
+
+        ctx.save();
+
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, 15);
+        ctx.clip();
+
+        ctx.drawImage(
+            img,
+            sx, sy, sw, sh,
+            x, y, w, h
+        );
+
+        ctx.restore();
+    }
+
+    ctx.fillStyle = "#76549b";
+    ctx.font = "16px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("CREATE YOUR OWN UNIVERSE", 450, 855);
+}
+
+photoInput.addEventListener("change", () => {
+
+    const files = Array.from(photoInput.files).slice(0, 4);
+
+    images = [];
+
+    if (files.length === 0) {
+        statusText.textContent = "Aucune photo sélectionnée.";
+        drawBoard();
+        return;
+    }
+
+    let loaded = 0;
+
+    files.forEach(file => {
+
+        if (!file.type.startsWith("image/")) {
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = event => {
+
+            const img = new Image();
+
+            img.onload = () => {
+
+                images.push(img);
+                loaded++;
+
+                if (loaded === files.length) {
+                    statusText.textContent =
+                        loaded + " image(s) importée(s) !";
+                    drawBoard();
+                }
+            };
+
+            img.src = event.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    });
+});
+
+document.getElementById("create")
+    .addEventListener("click", drawBoard);
+
+titleInput.addEventListener("input", drawBoard);
+backgroundInput.addEventListener("input", drawBoard);
+
+document.getElementById("download")
+    .addEventListener("click", () => {
+
+        const link = document.createElement("a");
+
+        link.download = "MOODORA-moodboard.png";
+        link.href = canvas.toDataURL("image/png");
+
+        link.click();
+    });
+
+drawBoard();
+
+</script>
+
+</body>
+</html>
+

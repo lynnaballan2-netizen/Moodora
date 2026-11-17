@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wallpaper Studio - MOODORA</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f3fb;
+    color: #30233f;
+}
+
+header {
+    background: white;
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #76549b;
+}
+
+header a {
+    color: #76549b;
+    text-decoration: none;
+}
+
+main {
+    max-width: 1050px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+h1 { font-size: 38px; }
+
+.subtitle {
+    color: #887b96;
+    margin-bottom: 35px;
+}
+
+.editor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.panel, .preview-panel {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px #30233f10;
+}
+
+label {
+    display: block;
+    margin: 20px 0 8px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ded3e9;
+    border-radius: 10px;
+    background: white;
+}
+
+input[type="color"] {
+    height: 50px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+button {
+    border: none;
+    padding: 14px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    background: #76549b;
+    color: white;
+    margin-top: 15px;
+    width: 100%;
+}
+
+button:hover { background: #52366f; }
+
+canvas {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    background: #d9c2ee;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #887b96;
+}
+
+@media(max-width:700px) {
+    .editor { grid-template-columns: 1fr; }
+    h1 { font-size: 30px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">MOODORA.</div>
+    <a href="espace.html">← Mon espace</a>
+</header>
+
+<main>
+    <h1>Wallpaper Studio ✨</h1>
+    <p class="subtitle">Imagine et crée un fond d'écran qui te ressemble.</p>
+
+    <div class="editor">
+
+        <section class="panel">
+            <h2>Personnalise ta création</h2>
+
+            <label for="title">Ton texte</label>
+            <input id="title" type="text" placeholder="Exemple : Rêvez grand">
+
+            <label for="color1">Première couleur</label>
+            <input id="color1" type="color" value="#76549b">
+
+            <label for="color2">Deuxième couleur</label>
+            <input id="color2" type="color" value="#e6d5f5">
+
+            <label for="fontSize">Taille du texte</label>
+            <select id="fontSize">
+                <option value="35">Petit</option>
+                <option value="50" selected>Moyen</option>
+                <option value="70">Grand</option>
+                <option value="90">Très grand</option>
+            </select>
+
+            <label for="format">Format</label>
+            <select id="format">
+                <option value="phone">Téléphone</option>
+                <option value="desktop">Ordinateur</option>
+            </select>
+
+            <button id="generate">Créer mon fond d'écran ✨</button>
+            <button id="download">Télécharger mon PNG ↓</button>
+            <button id="save">Enregistrer dans mes créations 💜</button>
+
+            <p id="message" aria-live="polite"></p>
+        </section>
+
+        <section class="preview-panel">
+            <h2>Aperçu de ta création</h2>
+            <canvas id="wallpaper" width="400" height="800"></canvas>
+        </section>
+
+    </div>
+</main>
+
+<footer>© 2026 MOODORA — Crée ton propre univers.</footer>
+
+<script>
+const canvas = document.getElementById("wallpaper");
+const ctx = canvas.getContext("2d");
+
+const title = document.getElementById("title");
+const color1 = document.getElementById("color1");
+const color2 = document.getElementById("color2");
+const fontSize = document.getElementById("fontSize");
+const format = document.getElementById("format");
+const message = document.getElementById("message");
+
+function createWallpaper() {
+
+    if (format.value === "phone") {
+        canvas.width = 400;
+        canvas.height = 800;
+    } else {
+        canvas.width = 1200;
+        canvas.height = 675;
+    }
+
+    const gradient = ctx.createLinearGradient(
+        0, 0, canvas.width, canvas.height
+    );
+
+    gradient.addColorStop(0, color1.value);
+    gradient.addColorStop(1, color2.value);
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "rgba(255,255,255,0.16)";
+    ctx.beginPath();
+    ctx.arc(
+        canvas.width * 0.8,
+        canvas.height * 0.2,
+        canvas.width * 0.25,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(255,255,255,0.13)";
+    ctx.beginPath();
+    ctx.arc(
+        canvas.width * 0.15,
+        canvas.height * 0.85,
+        canvas.width * 0.3,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+
+    const size = Number(fontSize.value) * (canvas.width / 400);
+
+    ctx.font = "bold " + size + "px Georgia";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowColor = "#39264d55";
+    ctx.shadowBlur = 12;
+
+    const words = title.value.trim() || "Rêvez grand";
+
+    ctx.fillText(
+        words.substring(0, 35),
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.85
+    );
+
+    ctx.shadowBlur = 0;
+    ctx.font = (16 * canvas.width / 400) + "px Arial";
+    ctx.fillStyle = "rgba(255,255,255,0.8)";
+
+    ctx.fillText(
+        "MOODORA",
+        canvas.width / 2,
+        canvas.height * 0.9
+    );
+}
+
+document.getElementById("generate").addEventListener("click", () => {
+    createWallpaper();
+    message.textContent = "Ton wallpaper est prêt ! ✨";
+});
+
+[color1, color2, fontSize, format, title].forEach(element => {
+    element.addEventListener("input", createWallpaper);
+    element.addEventListener("change", createWallpaper);
+});
+
+document.getElementById("download").addEventListener("click", () => {
+    const link = document.createElement("a");
+    link.download = "MOODORA-wallpaper.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+});
+
+document.getElementById("save").addEventListener("click", () => {
+    try {
+        const creations = JSON.parse(
+            localStorage.getItem("moodora-creations") || "[]"
+        );
+
+        creations.push({
+            title: title.value.trim() || "Mon wallpaper",
+            image: canvas.toDataURL("image/png"),
+            type: "wallpaper",
+            date: new Date().toLocaleDateString("fr-FR")
+        });
+
+        localStorage.setItem(
+            "moodora-creations",
+            JSON.stringify(creations)
+        );
+
+        message.textContent = "✨ Wallpaper enregistré dans ta bibliothèque !";
+    } catch (error) {
+        message.textContent = "Espace de stockage insuffisant. Essaie avec moins de créations.";
+    }
+});
+
+createWallpaper();
+</script>
+
+</body>
+</html>
+

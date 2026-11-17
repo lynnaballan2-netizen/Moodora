@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon espace — MOODORA</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f3fb;
+    color: #352944;
+}
+
+header {
+    height: 75px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+    border-bottom: 1px solid #eee;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #76549b;
+}
+
+header a {
+    color: #76549b;
+    text-decoration: none;
+}
+
+.container {
+    max-width: 1150px;
+    margin: 45px auto;
+    padding: 20px;
+}
+
+.welcome {
+    background: linear-gradient(120deg, #76549b, #b99bd8);
+    color: white;
+    padding: 40px;
+    border-radius: 22px;
+    margin-bottom: 35px;
+}
+
+.welcome h1 {
+    font-size: 35px;
+    margin-top: 0;
+}
+
+.welcome p {
+    line-height: 1.6;
+}
+
+h2 {
+    margin-top: 35px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.stat, .tool, .favorites {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px #35294408;
+}
+
+.stat strong {
+    display: block;
+    font-size: 30px;
+    color: #76549b;
+    margin-bottom: 8px;
+}
+
+.tools {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.tool {
+    transition: .2s;
+}
+
+.tool:hover {
+    transform: translateY(-4px);
+}
+
+.tool .emoji {
+    font-size: 35px;
+}
+
+.tool h3 {
+    color: #76549b;
+}
+
+.tool p {
+    color: #887b96;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.tool a {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 12px 18px;
+    background: #76549b;
+    color: white;
+    border-radius: 9px;
+    text-decoration: none;
+}
+
+.favorite-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.favorite-item {
+    flex: 1;
+    min-width: 180px;
+}
+
+.swatches {
+    display: flex;
+    height: 65px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.swatches span {
+    flex: 1;
+}
+
+footer {
+    text-align: center;
+    color: #887b96;
+    padding: 35px;
+}
+
+@media(max-width: 700px) {
+    .stats, .tools {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome {
+        padding: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">MOODORA.</div>
+    <a href="index.html">← Accueil</a>
+</header>
+
+<main class="container">
+
+<section class="welcome">
+    <h1>Bienvenue dans ton univers ✨</h1>
+    <p>
+        Ici, retrouve tes outils créatifs et tes palettes préférées.
+        Ton imagination n'a aucune limite.
+    </p>
+</section>
+
+<h2>Mon activité</h2>
+
+<section class="stats">
+
+    <div class="stat">
+        <strong id="favoriteCount">0</strong>
+        Palettes favorites
+    </div>
+
+    <div class="stat">
+        <strong>3</strong>
+        Studios créatifs
+    </div>
+
+    <div class="stat">
+        <strong>∞</strong>
+        Possibilités
+    </div>
+
+</section>
+
+<h2>Mes outils créatifs 🎨</h2>
+
+<section class="tools">
+
+    <article class="tool">
+        <div class="emoji">🖼️</div>
+        <h3>Wallpaper Studio</h3>
+        <p>Imagine et crée tes propres fonds d'écran.</p>
+        <a href="wallpaper.html">Ouvrir le studio</a>
+    </article>
+
+    <article class="tool">
+        <div class="emoji">✨</div>
+        <h3>Moodboard Studio</h3>
+        <p>Assemble tes photos et crée des moodboards.</p>
+        <a href="moodboard.html">Ouvrir le studio</a>
+    </article>
+
+    <article class="tool">
+        <div class="emoji">🎨</div>
+        <h3>Color Studio</h3>
+        <p>Crée tes propres palettes de couleurs.</p>
+        <a href="colors.html">Ouvrir le studio</a>
+    </article>
+
+</section>
+
+<h2>Mes palettes favorites ❤️</h2>
+
+<section class="favorites">
+    <div id="favoriteList" class="favorite-list">
+        Chargement...
+    </div>
+</section>
+
+</main>
+
+<footer>
+    © 2026 MOODORA — Your creativity, your universe.
+</footer>
+
+<script>
+
+const favorites = JSON.parse(
+    localStorage.getItem("moodora-favorites") || "[]"
+);
+
+document.getElementById("favoriteCount").textContent =
+    favorites.length;
+
+const list = document.getElementById("favoriteList");
+
+list.innerHTML = "";
+
+if (favorites.length === 0) {
+
+    list.textContent =
+        "Tes palettes favorites apparaîtront ici. 💜";
+
+} else {
+
+    favorites.forEach((colors, index) => {
+
+        const item = document.createElement("div");
+        item.className = "favorite-item";
+
+        const title = document.createElement("p");
+        title.textContent = "Palette " + (index + 1);
+
+        const swatches = document.createElement("div");
+        swatches.className = "swatches";
+
+        colors.forEach(color => {
+
+            const block = document.createElement("span");
+
+            if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+                block.style.backgroundColor = color;
+            }
+
+            swatches.appendChild(block);
+
+        });
+
+        item.appendChild(title);
+        item.appendChild(swatches);
+
+        list.appendChild(item);
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
+
