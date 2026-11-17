@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspiration | MOODORA</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f5fc;
+  color: #352944;
+}
+header {
+  padding: 22px 7%;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.logo { font-size: 25px; font-weight: bold; color: #241b35; letter-spacing: 2px; }
+.logo span { color: #9872c2; }
+nav { display: flex; gap: 22px; flex-wrap: wrap; }
+nav a { text-decoration: none; color: #51445f; font-size: 14px; }
+.hero {
+  padding: 85px 8%;
+  text-align: center;
+  background: linear-gradient(120deg,#eee2fa,#d8c3ee,#f8f5fc);
+}
+.hero small { color: #76549b; font-weight: bold; letter-spacing: 3px; }
+h1 { font-family: Georgia,serif; font-size: clamp(40px,7vw,65px); margin: 20px 0; }
+.hero p { color: #71657d; line-height: 1.8; }
+main { max-width: 1150px; margin: auto; padding: 65px 22px; }
+h2 { font-family: Georgia,serif; font-size: 34px; margin-bottom: 12px; }
+.intro { color: #81748d; margin-bottom: 30px; }
+.categories { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 35px; }
+.categories a {
+  background: white; border: 1px solid #e7dced;
+  padding: 12px 19px; border-radius: 30px;
+  text-decoration: none; color: #76549b;
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 22px;
+}
+.card {
+  background: white; border-radius: 20px;
+  overflow: hidden; box-shadow: 0 8px 25px #241b3510;
+  transition: .25s;
+}
+.card:hover { transform: translateY(-6px); }
+.art { height: 190px; display: grid; place-items: center; font-size: 55px; }
+.purple { background: linear-gradient(135deg,#4b286b,#c7a7e8); }
+.pink { background: linear-gradient(135deg,#f5cde4,#a57ac7); }
+.blue { background: linear-gradient(135deg,#c5d6ef,#7865a7); }
+.gold { background: linear-gradient(135deg,#f4e4c7,#b69acb); }
+.card-content { padding: 20px; }
+.card h3 { margin-bottom: 9px; }
+.card p { color: #81748d; font-size: 14px; line-height: 1.6; }
+.card a {
+  display: inline-block; margin-top: 17px;
+  color: #76549b; font-weight: bold;
+  text-decoration: none; font-size: 14px;
+}
+footer {
+  background: #241b35; color: white;
+  text-align: center; padding: 30px;
+}
+@media(max-width:600px) {
+  header { justify-content: center; }
+  nav { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MOODORA<span>.</span></div>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="espace.html">Mon espace</a>
+    <a href="wallpaper.html">Wallpaper Studio</a>
+    <a href="moodboard.html">Moodboard Studio</a>
+    <a href="colors.html">Color Studio</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <small>TON UNIVERS CRÉATIF</small>
+  <h1>Trouve ton inspiration.</h1>
+  <p>Explore des univers, découvre des couleurs et donne vie à tes idées.</p>
+</section>
+
+<main>
+  <h2>Explore nos univers</h2>
+  <p class="intro">Une dose d'inspiration pour toutes tes envies créatives.</p>
+
+  <div class="categories">
+    <a href="#wallpapers">📱 Wallpapers</a>
+    <a href="#moodboards">🎨 Moodboards</a>
+    <a href="#couleurs">🌈 Couleurs</a>
+  </div>
+
+  <section class="gallery">
+    <article class="card" id="wallpapers">
+      <div class="art purple">🌙</div>
+      <div class="card-content">
+        <h3>Midnight Dreams</h3>
+        <p>Un univers violet, mystérieux et étoilé.</p>
+        <a href="wallpaper.html">Créer mon wallpaper →</a>
+      </div>
+    </article>
+
+    <article class="card" id="moodboards">
+      <div class="art pink">🌸</div>
+      <div class="card-content">
+        <h3>Soft Romance</h3>
+        <p>Des tons doux pour un moodboard poétique.</p>
+        <a href="moodboard.html">Créer mon moodboard →</a>
+      </div>
+    </article>
+
+    <article class="card" id="couleurs">
+      <div class="art blue">🦋</div>
+      <div class="card-content">
+        <h3>Lavender Sky</h3>
+        <p>Des nuances pastel pour une ambiance apaisante.</p>
+        <a href="colors.html">Créer ma palette →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="art gold">✨</div>
+      <div class="card-content">
+        <h3>Golden Hour</h3>
+        <p>Une ambiance chaleureuse et lumineuse.</p>
+        <a href="wallpaper.html">Créer mon wallpaper →</a>
+      </div>
+    </article>
+  </section>
+</main>
+
+<footer>
+  <div class="logo">MOODORA<span>.</span></div>
+  <p>Imagine. Crée. Inspire.</p>
+</footer>
+
+</body>
+</html>
+
